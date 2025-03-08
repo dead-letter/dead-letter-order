@@ -1,6 +1,7 @@
 import os
 import sys
 import pika
+from pika import credentials
 
 # reference
 # https://www.rabbitmq.com/tutorials/tutorial-one-python#using-the-pika-python-client
@@ -14,7 +15,7 @@ def main():
     # dead-letter-data.dead-letter.svc.cluster.local
     db_service = os.environ["DB_SERVICE_URL"]
     connection = pika.BlockingConnection(pika.ConnectionParameters(
-        os.environ["MQ_URL"]))
+        os.environ["MQ_URL"], credentials=credentials.PlainCredentials(os.environ["MQ_USER"], os.environ["MQ_PASS"])))
     channel = connection.channel()
 
     channel.queue_declare(queue=os.environ["MQ_QUEUE"])
