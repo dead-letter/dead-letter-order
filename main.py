@@ -5,12 +5,16 @@ import pika
 # reference
 # https://www.rabbitmq.com/tutorials/tutorial-one-python#using-the-pika-python-client
 
+
 def order_received(channel, method, properties, body):
     pass
 
+
 def main():
-    db_service = os.environ["DB_SERVICE_URL"] # dead-letter-data.dead-letter.svc.cluster.local
-    connection = pika.BlockingConnection(pika.ConnectionParameters(os.environ["MQ_HOST"], os.environ["MQ_PORT"]))
+    # dead-letter-data.dead-letter.svc.cluster.local
+    db_service = os.environ["DB_SERVICE_URL"]
+    connection = pika.BlockingConnection(pika.ConnectionParameters(
+        os.environ["MQ_URL"]))
     channel = connection.channel()
 
     channel.queue_declare(queue=os.environ["MQ_QUEUE"])
@@ -22,6 +26,7 @@ def main():
     )
 
     channel.start_consuming()
+
 
 if __name__ == '__main__':
     try:
